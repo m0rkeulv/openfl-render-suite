@@ -1,9 +1,9 @@
 name: Render tests
 
-# The OpenFL render test suite, run on four openfl builds side by side: openfl's official develop
+# The OpenFL render test suite, run on five openfl builds side by side: openfl's official develop
 # branch, and from the openfl fork of this repository's owner (<owner>/openfl) the castlewars/prod
-# branch and the two pull-request branches
-# pr/cairo-supersampling and pr/filters-flash-parity. Each build runs every test on two runners in
+# branch and the three pull-request branches pr/cairo-supersampling, pr/filters-flash-parity and
+# pr/blend-modes-v2. Each build runs every test on two runners in
 # parallel: the Cairo renderer (HashLink and neko, SDL's dummy video driver, no display) and OpenGL
 # (HashLink under Xvfb with Mesa's llvmpipe). A report job per build merges the two into one HTML
 # report: the "render-test-report-<build>" artifact and a table on the run's summary page.
@@ -33,6 +33,9 @@ on:
       filters_ref:
         description: "ref of the filters pull request"
         default: "pr/filters-flash-parity"
+      blend_modes_ref:
+        description: "ref of the blend modes pull request"
+        default: "pr/blend-modes-v2"
       lime_version:
         description: "lime release from haxelib"
         default: "8.3.2"
@@ -66,6 +69,9 @@ jobs:
           - id: filters-flash-parity
             repository: ${{ inputs.fork_repository || format('{0}/openfl', github.repository_owner) }}
             ref: ${{ inputs.filters_ref || 'pr/filters-flash-parity' }}
+          - id: blend-modes-v2
+            repository: ${{ inputs.fork_repository || format('{0}/openfl', github.repository_owner) }}
+            ref: ${{ inputs.blend_modes_ref || 'pr/blend-modes-v2' }}
         renderer:
           - id: cairo
             title: Cairo, HashLink and neko
@@ -149,6 +155,8 @@ jobs:
             options: ""
           - build: filters-flash-parity
             options: ""
+          - build: blend-modes-v2
+            options: ""
     name: Report ${{ matrix.build }}
     runs-on: ubuntu-24.04
     steps:
@@ -225,6 +233,11 @@ jobs:
           name: render-test-report-filters-flash-parity
           path: site/filters-flash-parity
 
+      - uses: actions/download-artifact@v8
+        with:
+          name: render-test-report-blend-modes-v2
+          path: site/blend-modes-v2
+
       - name: Index page
         run: |
           cat > site/index.html <<'HTML'
@@ -237,6 +250,7 @@ jobs:
           <li><a href="castlewars-prod/index.html">castlewars/prod</a></li>
           <li><a href="cairo-supersampling/index.html">pr/cairo-supersampling</a>: Cairo supersampling (fill-seam bleed, stage quality)</li>
           <li><a href="filters-flash-parity/index.html">pr/filters-flash-parity</a>: the bitmap filters against Flash</li>
+          <li><a href="blend-modes-v2/index.html">pr/blend-modes-v2</a>: blend modes, groups, cutters, coverage and alpha</li>
           </ul>
           <p>Every build but develop is shown with its change against develop.</p>
           </body></html>

@@ -115,12 +115,12 @@ haxe air.hxml coverage --adl "<AIR SDK>/bin/adl.exe"
 
 ## Continuous integration
 
-`.github/workflows/render-tests.yml` runs every test on GitHub's Linux runners for four openfl
+`.github/workflows/render-tests.yml` runs every test on GitHub's Linux runners for five openfl
 builds: openfl/openfl `develop`, and from the repository owner's openfl fork (`<owner>/openfl`)
-`castlewars/prod` and the pull-request branches `pr/cairo-supersampling` and
-`pr/filters-flash-parity`. Each build runs on two runners in
-parallel, the Cairo renderer under SDL's dummy driver (HashLink and neko) and OpenGL under Xvfb
-with Mesa's llvmpipe, so eight jobs run at once. A report job per build merges its two halves:
+`castlewars/prod` and the pull-request branches `pr/cairo-supersampling`,
+`pr/filters-flash-parity` and `pr/blend-modes-v2`. Each build runs on two runners in parallel, the
+Cairo renderer under SDL's dummy driver (HashLink and neko) and OpenGL under Xvfb with Mesa's
+llvmpipe (on one thread, `LP_NUM_THREADS=0`), so ten jobs run at once. A report job per build merges its two halves:
 
 | Build | Artifact | |
 |---|---|---|
@@ -128,10 +128,11 @@ with Mesa's llvmpipe, so eight jobs run at once. A report job per build merges i
 | castlewars/prod | `render-test-report-castlewars-prod` | with the change against develop; a test over its limit fails the job |
 | pr/cairo-supersampling | `render-test-report-cairo-supersampling` | with the change against develop: what the pull request fixes; only reports |
 | pr/filters-flash-parity | `render-test-report-filters-flash-parity` | the same |
+| pr/blend-modes-v2 | `render-test-report-blend-modes-v2` | the same |
 
 A pull-request branch carries one fix on top of develop, so the tests for the other fixes still
 show develop's failures; that is why only castlewars/prod can fail the run. Each run's summary page
-shows the four result tables. Pushes and pull requests run it; from the Actions tab the refs, the
+shows the five result tables. Pushes and pull requests run it; from the Actions tab the refs, the
 fork, the lime release and the tests can be chosen. With the repository variable
 `RENDER_TESTS_PAGES` set to `true` and Pages set to "GitHub Actions", the reports are also published
 as web pages under one index. A lime git checkout needs its native libraries rebuilt, so the
