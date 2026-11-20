@@ -1,0 +1,41 @@
+{
+ "id": "blend",
+ "group": "modes",
+ "title": "Every blend mode",
+ "text": "Every blend mode on a foreground inside a LAYER, over a grey ramp and coloured squares and hanging over the stage ground: a live cell (the renderer's blend path), a cell drawn by BitmapData.draw of the same layer, and a cell where the mode is on a container of two overlapping children. The foreground is a bitmap, and in the variants vector paths, drawRect fills, and discs with anti-aliased rims (the rims are scored apart, since each rasteriser anti-aliases in its own way).",
+ "renderers": [
+  "hl_opengl",
+  "hl_cairo"
+ ],
+ "defines": [],
+ "variants": [
+  {
+   "suffix": "_vector",
+   "label": "vector paths",
+   "defines": [
+    "blend_vector"
+   ],
+   "air": true
+  },
+  {
+   "suffix": "_rect",
+   "label": "drawRect",
+   "defines": [
+    "blend_vector",
+    "blend_vector_rect"
+   ],
+   "air": true
+  },
+  {
+   "suffix": "_circle",
+   "label": "anti-aliased discs",
+   "defines": [
+    "blend_vector_circle"
+   ],
+   "air": true
+  }
+ ],
+ "limits": {
+  "worst cell": 0.5
+ }
+}

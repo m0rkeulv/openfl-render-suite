@@ -1,0 +1,8 @@
+{
+ "id": "nested",
+ "group": "groups",
+ "title": "Nested groups",
+ "text": "Twenty-four cases of blended children in LAYERs: over siblings, over regions an earlier mask cut, over ground nothing drew, and inside further LAYERs and blended containers.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell": 0.5}
+}

@@ -1,0 +1,8 @@
+{
+ "id": "drawroot",
+ "group": "groups",
+ "title": "The mode given to BitmapData.draw",
+ "text": "BitmapData.draw with a blend mode composites the source as one object, into transparent and opaque bitmaps.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell": 0.5}
+}

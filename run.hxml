@@ -1,0 +1,4 @@
+# The whole suite: haxe run.hxml [test ...] [options]  (see tools/Suite.hx; --list shows the tests)
+--class-path tools
+--class-path common/src
+--run Suite

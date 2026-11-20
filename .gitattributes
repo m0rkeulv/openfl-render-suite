@@ -1,0 +1,4 @@
+# text with LF in the repository and on checkout (the suite runs on Windows, Linux and macOS alike)
+* text=auto eol=lf
+*.png binary
+*.ttf binary

@@ -1,0 +1,43 @@
+{
+ "id": "filters",
+ "group": "filters",
+ "title": "Filter parameter sweep",
+ "text": "Every filter at several quality, distance, strength, angle and alpha settings, on a live vector shape (the renderer's own filter path) and through BitmapData.applyFilter (the software path), each against AIR. 43 cases on four pages of a 1290 x 930 window.",
+ "renderers": [
+  "hl_opengl",
+  "hl_cairo"
+ ],
+ "plainRun": false,
+ "variants": [
+  {
+   "suffix": "_p0",
+   "label": "page 1 (blur, glow)",
+   "defines": []
+  },
+  {
+   "suffix": "_p1",
+   "label": "page 2 (shadow, bevel)",
+   "defines": []
+  },
+  {
+   "suffix": "_p2",
+   "label": "page 3 (bevel, gradient glow and bevel)",
+   "defines": []
+  },
+  {
+   "suffix": "_p3",
+   "label": "page 4 (gradient bevel, circles, alpha)",
+   "defines": []
+  }
+ ],
+ "limits": {
+  "cases not available": 0,
+  "worst live cell": 1.0,
+  "worst applyFilter cell": 1.0
+ },
+ "notes": [
+  "Mean channel difference per 160 x 160 cell, 0 to 255: filters that match AIR sit at 0.0 to 0.7, a visibly wrong one at 8 to 17, so the limit is 1.0."
+ ],
+ "airWindow": false,
+ "airReference": "draw"
+}

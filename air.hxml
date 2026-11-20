@@ -1,0 +1,3 @@
+# AIR references again (Windows, AIR SDK): haxe air.hxml <test> [...] --adl <adl.exe>  (see tools/Air.hx)
+--class-path tools
+--run Air

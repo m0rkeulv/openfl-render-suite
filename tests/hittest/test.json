@@ -1,0 +1,9 @@
+{
+ "id": "hittest",
+ "group": "coverage",
+ "title": "Hit tests do not change drawing",
+ "text": "A shape switched to ALPHA after a hitTestPoint call. The hit test must not leave the Cairo rasteriser in a state that paints the shape's coverage empty.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "variants": [{"suffix": "_nohit", "label": "no hit test", "defines": ["hittest_nohits"], "renderers": ["hl_cairo", "neko_cairo"]}],
+ "limits": {"worst cell": 0.5}
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="HitTest" package="rendertest.hittest" version="1.0.0" company="" />
+	<app main="Main" file="HitTest" path="Export" />
+	<window width="200" height="200" fps="60" />
+	<source path="Source" />
+	<include path="../../common/rendertest.xml" />
+</project>

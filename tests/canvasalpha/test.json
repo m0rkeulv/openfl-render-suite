@@ -1,0 +1,8 @@
+{
+ "id": "canvasalpha",
+ "group": "coverage",
+ "title": "Blended container at half alpha",
+ "text": "A container at alpha 0.5 under ADD, MULTIPLY, SCREEN or DIFFERENCE holding two bitmaps that do not overlap. It must equal the two bitmaps blended separately at alpha 0.5.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell": 0.5}
+}

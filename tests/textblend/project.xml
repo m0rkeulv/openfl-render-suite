@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="TextBlend" package="rendertest.textblend" version="1.0.0" company="" />
+	<app main="Main" file="TextBlend" path="Export" />
+	<window width="1500" height="640" fps="60" />
+	<source path="Source" />
+	<!-- Noto Sans (SIL Open Font License), the font of the OpenFL checkout, embedded so AIR and OpenFL draw the same glyphs -->
+	<assets path="Assets" rename="assets" embed="true" />
+	<include path="../../common/rendertest.xml" />
+</project>

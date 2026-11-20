@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="FilterSweep" package="rendertest.filters" version="1.0.0" company="" />
+	<app main="Main" file="FilterSweep" path="Export" />
+	<window width="1290" height="930" fps="30" />
+	<window width="1290" height="3340" if="flash" />
+	<source path="Source" />
+	<include path="../../common/rendertest.xml" />
+</project>

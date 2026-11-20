@@ -1,0 +1,8 @@
+{
+ "id": "coveragealpha",
+ "group": "coverage",
+ "title": "ALPHA container at half alpha",
+ "text": "An ALPHA container at alpha 0.5 must render exactly like an ALPHA container holding a shape filled at 0.5, rims included.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell": 0}
+}

@@ -1,0 +1,8 @@
+{
+ "id": "alphaswitch",
+ "group": "coverage",
+ "title": "Switching to ALPHA later",
+ "text": "A shape that becomes ALPHA after it was rendered, directly, through its container or through BitmapData.draw. It must still be masked by its fills, not by its box.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell": 0.5}
+}

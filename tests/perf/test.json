@@ -1,0 +1,14 @@
+{
+ "id": "perf",
+ "group": "perf",
+ "title": "Software rendering performance",
+ "text": "Timings of OpenFL's software path on HashLink: the bitmap filters, vector drawing through Cairo, and text layout and drawing, each case timed after a warm-up with what it allocates and a CRC of its result. No reference: compare two builds with the runner's --baseline.",
+ "renderers": ["hl_cairo"],
+ "plainRun": false,
+ "timeout": 1200,
+ "variants": [
+  {"suffix": "_filters", "label": "filters", "defines": []},
+  {"suffix": "_vector", "label": "vector drawing", "defines": []},
+  {"suffix": "_text", "label": "text", "defines": []}
+ ]
+}

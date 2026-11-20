@@ -1,0 +1,6 @@
+# build output and results; the references in tests/*/reference/ are part of the suite
+tests/*/Export/
+tests/*/results/
+results/
+results-*/
+original/

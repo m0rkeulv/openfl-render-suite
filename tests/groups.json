@@ -1,0 +1,8 @@
+[
+ {"id": "modes", "title": "Modes and objects", "text": "The blend modes one by one, on bitmaps, vector shapes, text, and objects of changing size and angle."},
+ {"id": "groups", "title": "Groups and cutters", "text": "What Flash does inside LAYER containers, cached bitmaps and BitmapData.draw, where ERASE and ALPHA cut and where SUBTRACT and INVERT draw an object as it is."},
+ {"id": "coverage", "title": "Coverage and alpha", "text": "ALPHA masks with what an object covers, and an object's alpha applies once to the whole object."},
+ {"id": "vector", "title": "Vector rasterising", "text": "How OpenFL's Cairo renderer rasterises vector art: seams between abutting fills, anti-aliasing per stage quality."},
+ {"id": "filters", "title": "Filters", "text": "The bitmap filters against AIR at every quality, distance, strength and angle."},
+ {"id": "perf", "title": "Performance", "text": "Timings of the software filters, vector drawing and text layout; no reference, compared between builds."}
+]

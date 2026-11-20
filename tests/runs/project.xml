@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="Runs" package="rendertest.runs" version="1.0.0" company="" />
+	<app main="Main" file="Runs" path="Export" />
+	<window width="720" height="600" fps="60" />
+	<source path="Source" />
+	<include path="../../common/rendertest.xml" />
+</project>

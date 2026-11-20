@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="BlendModeCheck" package="rendertest.blend" version="1.0.0" company="" />
+	<app main="Main" file="BlendModeCheck" path="Export" />
+	<window width="800" height="768" fps="30" />
+	<window borderless="true" if="hl" />
+	<source path="Source" />
+	<include path="../../common/rendertest.xml" />
+</project>

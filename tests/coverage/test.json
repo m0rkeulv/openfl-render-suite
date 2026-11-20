@@ -1,0 +1,8 @@
+{
+ "id": "coverage",
+ "group": "coverage",
+ "title": "ALPHA on a changing shape",
+ "text": "A shape under ALPHA whose fills move between frames within the same bounds. Its mask has to follow the current frame's fills.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "limits": {"worst cell": 0.5}
+}

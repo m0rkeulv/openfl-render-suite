@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="Cutters" package="rendertest.cutters" version="1.0.0" company="" />
+	<app main="Main" file="Cutters" path="Export" />
+	<!-- borderless: AIR then renders the stage 1:1 in the top-left of the window, which the window capture relies on -->
+	<window width="1440" height="600" fps="60" borderless="true" />
+	<source path="Source" />
+	<include path="../../common/rendertest.xml" />
+</project>

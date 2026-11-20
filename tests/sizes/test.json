@@ -1,0 +1,9 @@
+{
+ "id": "sizes",
+ "group": "modes",
+ "title": "Object sizes",
+ "text": "Blended objects that alternate between large and small. Renderers reuse one scratch surface per nesting level, so a small object must not see a large one's leftovers and a large one must get its full area.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "defines": [],
+ "limits": {"worst cell": 0}
+}

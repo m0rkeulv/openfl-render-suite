@@ -1,0 +1,246 @@
+name: Render tests
+
+# The OpenFL render test suite, run on four openfl builds side by side: openfl's official develop
+# branch, and from the openfl fork of this repository's owner (<owner>/openfl) the castlewars/prod
+# branch and the two pull-request branches
+# pr/cairo-supersampling and pr/filters-flash-parity. Each build runs every test on two runners in
+# parallel: the Cairo renderer (HashLink and neko, SDL's dummy video driver, no display) and OpenGL
+# (HashLink under Xvfb with Mesa's llvmpipe). A report job per build merges the two into one HTML
+# report: the "render-test-report-<build>" artifact and a table on the run's summary page.
+# Every build but develop is reported with its change against develop, which shows what a branch
+# fixes. Only castlewars/prod fails the run when a test is over its limit: a pull-request branch
+# carries one fix on top of develop, so the tests of the others still show develop's failures.
+# With the repository variable RENDER_TESTS_PAGES set to true and Pages set to "GitHub Actions",
+# the reports are published as web pages as well.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      develop_ref:
+        description: "ref of openfl/openfl to test as the official build"
+        default: "develop"
+      fork_repository:
+        description: "repository of the other builds (owner/name; empty: <owner of this repository>/openfl)"
+        default: ""
+      castlewars_ref:
+        description: "ref of the castlewars build"
+        default: "castlewars/prod"
+      supersampling_ref:
+        description: "ref of the Cairo supersampling pull request"
+        default: "pr/cairo-supersampling"
+      filters_ref:
+        description: "ref of the filters pull request"
+        default: "pr/filters-flash-parity"
+      lime_version:
+        description: "lime release from haxelib"
+        default: "8.3.2"
+      tests:
+        description: "tests to run, space separated (empty: all)"
+        default: ""
+
+env:
+  HAXE_VERSION: 4.3.7
+  LIME_VERSION: ${{ inputs.lime_version || '8.3.2' }}
+  TESTS: ${{ inputs.tests || '' }}
+  # the runners have no sound card: SDL writes audio to a file, OpenAL Soft uses its null backend
+  SDL_AUDIODRIVER: disk
+  ALSOFT_DRIVERS: "null"
+
+jobs:
+  render:
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          - id: develop
+            repository: openfl/openfl
+            ref: ${{ inputs.develop_ref || 'develop' }}
+          - id: castlewars-prod
+            repository: ${{ inputs.fork_repository || format('{0}/openfl', github.repository_owner) }}
+            ref: ${{ inputs.castlewars_ref || 'castlewars/prod' }}
+          - id: cairo-supersampling
+            repository: ${{ inputs.fork_repository || format('{0}/openfl', github.repository_owner) }}
+            ref: ${{ inputs.supersampling_ref || 'pr/cairo-supersampling' }}
+          - id: filters-flash-parity
+            repository: ${{ inputs.fork_repository || format('{0}/openfl', github.repository_owner) }}
+            ref: ${{ inputs.filters_ref || 'pr/filters-flash-parity' }}
+        renderer:
+          - id: cairo
+            title: Cairo, HashLink and neko
+            list: hl_cairo,neko_cairo
+          - id: opengl
+            title: OpenGL, HashLink on Xvfb
+            list: hl_opengl
+    name: ${{ matrix.build.id }} - ${{ matrix.renderer.title }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: suite
+
+      - name: Check out openfl ${{ matrix.build.repository }} ${{ matrix.build.ref }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.build.repository }}
+          ref: ${{ matrix.build.ref }}
+          path: openfl
+          fetch-depth: 50
+
+      - name: Name the checkout after its ref
+        # the results record the openfl branch; a detached checkout would read "(detached)"
+        run: git -C openfl switch -c "${{ matrix.build.ref }}" || true
+
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Install lime and the build tools
+        run: |
+          echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
+          haxelib install format --quiet
+          haxelib install hxp --quiet
+          haxelib install lime $LIME_VERSION --quiet
+
+      - name: Install Xvfb and Mesa
+        if: matrix.renderer.id == 'opengl'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri mesa-utils
+          xvfb-run -a glxinfo -B
+
+      - name: Run every test (${{ matrix.renderer.list }})
+        working-directory: suite
+        run: |
+          options="--renderers ${{ matrix.renderer.list }} --openfl $GITHUB_WORKSPACE/openfl --out $GITHUB_WORKSPACE/results"
+          if [ "${{ matrix.renderer.id }}" = "opengl" ]; then
+            # llvmpipe renders on threads of its own: OpenFL waits for the framebuffer before copying a backdrop
+            export LIBGL_ALWAYS_SOFTWARE=1
+            xvfb-run -a -s "-screen 0 1600x1200x24" haxe run.hxml $TESTS $options -D openfl_gl_sync_backdrop
+          else
+            haxe run.hxml $TESTS $options
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: render-tests-${{ matrix.build.id }}-${{ matrix.renderer.id }}
+          path: results
+          if-no-files-found: warn
+
+  report:
+    needs: render
+    if: ${{ !cancelled() }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - build: develop
+            options: ""
+          - build: castlewars-prod
+            options: "--strict"
+          - build: cairo-supersampling
+            options: ""
+          - build: filters-flash-parity
+            options: ""
+    name: Report ${{ matrix.build }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: suite
+
+      - uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Collect the results of both renderers
+        uses: actions/download-artifact@v4
+        with:
+          pattern: render-tests-${{ matrix.build }}-*
+          path: results
+          merge-multiple: true
+
+      - name: Collect develop's results as the baseline
+        if: matrix.build != 'develop'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: render-tests-develop-*
+          path: baseline
+          merge-multiple: true
+
+      - name: Build the report
+        working-directory: suite
+        env:
+          RENDERTEST_REPORT_LINK: "[the full report: artifact render-test-report-${{ matrix.build }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)"
+          RENDERTEST_SUMMARY_TITLE: "OpenFL render tests: ${{ matrix.build }}"
+        run: |
+          # every build but develop is compared with develop; castlewars/prod also fails the job when
+          # a test is over its limit (--strict)
+          options="${{ matrix.options }}"
+          if [ -d "$GITHUB_WORKSPACE/baseline" ]; then options="$options --baseline $GITHUB_WORKSPACE/baseline"; fi
+          haxe run.hxml --report-only --out "$GITHUB_WORKSPACE/results" $options --summary "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: render-test-report-${{ matrix.build }}
+          path: results
+
+  publish:
+    name: Publish the reports
+    needs: report
+    if: ${{ !cancelled() && vars.RENDER_TESTS_PAGES == 'true' && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: render-test-report-develop
+          path: site/develop
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: render-test-report-castlewars-prod
+          path: site/castlewars-prod
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: render-test-report-cairo-supersampling
+          path: site/cairo-supersampling
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: render-test-report-filters-flash-parity
+          path: site/filters-flash-parity
+
+      - name: Index page
+        run: |
+          cat > site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en"><head><meta charset="utf-8"><title>OpenFL render tests</title></head>
+          <body style="font: 16px/1.6 system-ui, sans-serif; max-width: 40em; margin: 3em auto; padding: 0 16px">
+          <h1>OpenFL render tests</h1>
+          <ul>
+          <li><a href="develop/index.html">openfl develop</a></li>
+          <li><a href="castlewars-prod/index.html">castlewars/prod</a></li>
+          <li><a href="cairo-supersampling/index.html">pr/cairo-supersampling</a>: Cairo supersampling (fill-seam bleed, stage quality)</li>
+          <li><a href="filters-flash-parity/index.html">pr/filters-flash-parity</a>: the bitmap filters against Flash</li>
+          </ul>
+          <p>Every build but develop is shown with its change against develop.</p>
+          </body></html>
+          HTML
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

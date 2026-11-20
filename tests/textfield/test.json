@@ -1,0 +1,8 @@
+{
+ "id": "textfield",
+ "group": "modes",
+ "title": "Text that changes every frame",
+ "text": "A text field under each mode, its text changing every frame, so a stale texture would show an earlier frame's text. Device text differs between AIR and OpenFL, so each cell is compared with its row's NORMAL cell in the same capture, and the outcome with AIR's. On screen ERASE and ALPHA in a LAYER that holds only the text show nothing.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"cells off AIR's outcome": 0}
+}

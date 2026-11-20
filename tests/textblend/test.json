@@ -1,0 +1,9 @@
+{
+ "id": "textblend",
+ "group": "modes",
+ "title": "Blend modes on text",
+ "text": "Every mode on an embedded-font text field over coloured shapes, placed plainly, at fractional positions, rotated, scaled, at half alpha, in a sprite and in a LAYER. Glyph edges differ between rasterisers, so each cell is scored against the mode's formula applied to the renderer's own plain text.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "limits": {"worst cell vs formula": 4.5, "largest blend shift": 0.5, "text placement vs AIR": 1.0},
+ "notes": ["ADD and SUBTRACT glyph edges differ from the formula by 2 to 4% on every OpenFL renderer: Flash mixes an edge pixel's backdrop with the clipped blend result by coverage, the renderers clip the coverage-weighted sum."]
+}

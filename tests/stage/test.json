@@ -1,0 +1,24 @@
+{
+ "id": "stage",
+ "group": "groups",
+ "title": "Straight on the stage",
+ "text": "SUBTRACT, INVERT, ERASE and ALPHA directly on an opaque stage and on a transparent one, and the same objects inside a LAYER.",
+ "renderers": [
+  "hl_opengl",
+  "hl_cairo"
+ ],
+ "variants": [
+  {
+   "suffix": "_t",
+   "label": "transparent stage",
+   "defines": [
+    "transparent_stage"
+   ],
+   "air": true,
+   "airTransparent": true
+  }
+ ],
+ "limits": {
+  "worst cell": 0.5
+ }
+}

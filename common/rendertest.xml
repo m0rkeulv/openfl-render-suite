@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<!--
+		Included by every test's project.xml. Which lime and openfl a test is built against:
+		the haxelib versions that are current, or a checkout given by its folder:
+		  lime build hl -DRENDERTEST_OPENFL=/path/to/openfl -DRENDERTEST_LIME=/path/to/lime
+		The results record which ones were used (version, git branch and commit).
+	-->
+	<haxelib name="lime" path="${RENDERTEST_LIME}" if="RENDERTEST_LIME" />
+	<haxelib name="openfl" path="${RENDERTEST_OPENFL}" if="RENDERTEST_OPENFL" />
+	<haxelib name="openfl" unless="RENDERTEST_OPENFL" />
+
+	<source path="src" />
+
+	<!-- -Dsoftware: OpenFL's Cairo renderer instead of OpenGL -->
+	<window hardware="false" if="software" />
+	<window allow-high-dpi="false" />
+</project>

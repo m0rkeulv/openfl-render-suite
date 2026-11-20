@@ -1,0 +1,29 @@
+{
+ "id": "quality",
+ "group": "vector",
+ "title": "Stage quality",
+ "text": "Shapes that alias badly (thin diagonals, small circles, rotated squares, stars, checkerboards, hairlines, sub-pixel edges) and abutting-fill elements, drawn with BitmapData.draw at every stage quality and compared with AIR at the same quality: over the whole scene, over the anti-aliased edges, and for seam bleed.",
+ "renderers": [
+  "hl_cairo"
+ ],
+ "variants": [
+  {
+   "suffix": "_nosupersample",
+   "label": "supersampling off",
+   "defines": [
+    "openfl_cairo_no_supersample"
+   ]
+  }
+ ],
+ "limits": {
+  "bleed": 0.05,
+  "hl_cairo_nosupersample": {
+   "bleed": 100
+  }
+ },
+ "notes": [
+  "The edge scores measure how close the anti-aliasing is to AIR's at each quality; they have no limit. LOW is far apart by nature: an aliased edge pixel is either in or out, and AIR and Cairo decide differently on the boundary.",
+  "The \"supersampling off\" run only reports: it shows the seam bleed that OpenFL's Cairo supersampling removes."
+ ],
+ "airWindow": false
+}

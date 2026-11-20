@@ -1,0 +1,9 @@
+{
+ "id": "runs",
+ "group": "groups",
+ "title": "Runs of SUBTRACT and INVERT",
+ "text": "Sequences of SUBTRACT and INVERT objects in a LAYER and everything that can interrupt them: normal children, cutters, nested LAYERs and cached children.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "limits": {"worst cell": 3.5},
+ "notes": ["Known difference, the same on every renderer: where a later object covers a SUBTRACT or INVERT pixel drawn over nothing, Flash shows the hidden mode result (opaque black or white) and OpenFL the object as it is, up to 3.1% of a cell."]
+}

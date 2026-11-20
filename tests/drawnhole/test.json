@@ -1,0 +1,8 @@
+{
+ "id": "drawnhole",
+ "group": "groups",
+ "title": "What counts as drawn",
+ "text": "A bar in each mode crossing a ring with a hole inside a LAYER. It shows whether the part of a LAYER counted as drawn follows the shape of what was drawn or its bounding box.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "limits": {"cells read differently": 0, "worst shape cell": 0.5, "worst text cell": 0.5}
+}

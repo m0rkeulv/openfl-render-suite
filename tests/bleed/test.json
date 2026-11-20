@@ -1,0 +1,28 @@
+{
+ "id": "bleed",
+ "group": "vector",
+ "title": "Fill-seam bleed",
+ "text": "Vector elements built from abutting fills on a magenta ground, drawn with BitmapData.draw at every stage quality and at scale 1 and 3. Where each fill is anti-aliased on its own, the ground shows through the shared edges; AIR and the supersampled Cairo path show no seam.",
+ "renderers": [
+  "hl_cairo"
+ ],
+ "variants": [
+  {
+   "suffix": "_nosupersample",
+   "label": "supersampling off",
+   "defines": [
+    "openfl_cairo_no_supersample"
+   ]
+  }
+ ],
+ "limits": {
+  "bleed": 0.05,
+  "hl_cairo_nosupersample": {
+   "bleed": 100
+  }
+ },
+ "notes": [
+  "The \"supersampling off\" run is the same art without OpenFL's Cairo supersampling (-D openfl_cairo_no_supersample): it shows the bleed the supersampler removes, so it only reports and never fails."
+ ],
+ "airWindow": false
+}

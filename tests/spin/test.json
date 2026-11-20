@@ -1,0 +1,9 @@
+{
+ "id": "spin",
+ "group": "modes",
+ "title": "Rotated objects",
+ "text": "Blended objects at eight angles. The composite has to find the backdrop under each rotated pixel, and a rotated container's coverage has to follow its children.",
+ "renderers": ["hl_opengl", "hl_cairo", "neko_cairo"],
+ "defines": [],
+ "limits": {"worst interior": 0.5}
+}

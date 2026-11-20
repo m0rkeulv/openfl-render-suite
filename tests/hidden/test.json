@@ -1,0 +1,8 @@
+{
+ "id": "hidden",
+ "group": "groups",
+ "title": "Objects that draw nothing",
+ "text": "A placeholder that is invisible, at alpha 0, or an invisible child, next to a SUBTRACT, INVERT, ERASE or ALPHA disc. An object that draws nothing must not count as drawn.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell vs AIR": 0.5}
+}

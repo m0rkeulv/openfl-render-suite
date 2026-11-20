@@ -1,0 +1,8 @@
+{
+ "id": "cachebitmap",
+ "group": "groups",
+ "title": "Inside cacheAsBitmap",
+ "text": "The formula modes inside a cacheAsBitmap container must look exactly as inside a LAYER: the cached container is its own buffer.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"worst cell vs AIR": 0.5}
+}

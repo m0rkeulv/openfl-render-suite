@@ -1,0 +1,9 @@
+{
+ "id": "cutters",
+ "group": "groups",
+ "title": "Where ERASE and ALPHA cut",
+ "text": "ERASE and ALPHA objects in every kind of container: plain, at half alpha, blended, cached, filtered, scrolled, masked and in LAYERs. On screen Flash draws them only inside a buffer of their own; straight on the stage they are not drawn at all.",
+ "renderers": ["hl_opengl", "hl_cairo"],
+ "limits": {"cells read differently": 4, "hl_opengl": {"cells read differently": 10}},
+ "notes": ["Known difference: a cached container at alpha 0.5 cuts at full strength on every renderer where AIR's window cuts at half strength (4 cells), and on OpenGL an ERASE, ALPHA or SUBTRACT bar with its own cacheAsBitmap or filter inside a LAYER is not drawn (6 more cells)."]
+}
