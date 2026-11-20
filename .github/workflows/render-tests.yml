@@ -77,12 +77,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: suite
 
       - name: Check out openfl ${{ matrix.build.repository }} ${{ matrix.build.ref }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.build.repository }}
           ref: ${{ matrix.build.ref }}
@@ -116,14 +116,18 @@ jobs:
         run: |
           options="--renderers ${{ matrix.renderer.list }} --openfl $GITHUB_WORKSPACE/openfl --out $GITHUB_WORKSPACE/results"
           if [ "${{ matrix.renderer.id }}" = "opengl" ]; then
-            # llvmpipe renders on threads of its own: OpenFL waits for the framebuffer before copying a backdrop
             export LIBGL_ALWAYS_SOFTWARE=1
+            # llvmpipe rasterises on threads of its own, and OpenFL's copy of a group's backdrop
+            # (glCopyTexSubImage2D) can read the framebuffer before they finish: blended groups and
+            # LAYERs then show stale or foreign content. On one thread there is nothing to race
+            # (checked with Mesa 26.3 on Windows: 13 failing OpenGL tests all pass, and no slower).
+            export LP_NUM_THREADS=0
             xvfb-run -a -s "-screen 0 1600x1200x24" haxe run.hxml $TESTS $options -D openfl_gl_sync_backdrop
           else
             haxe run.hxml $TESTS $options
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: render-tests-${{ matrix.build.id }}-${{ matrix.renderer.id }}
@@ -148,7 +152,7 @@ jobs:
     name: Report ${{ matrix.build }}
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: suite
 
@@ -157,7 +161,7 @@ jobs:
           haxe-version: ${{ env.HAXE_VERSION }}
 
       - name: Collect the results of both renderers
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: render-tests-${{ matrix.build }}-*
           path: results
@@ -165,7 +169,7 @@ jobs:
 
       - name: Collect develop's results as the baseline
         if: matrix.build != 'develop'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: render-tests-develop-*
           path: baseline
@@ -183,7 +187,7 @@ jobs:
           if [ -d "$GITHUB_WORKSPACE/baseline" ]; then options="$options --baseline $GITHUB_WORKSPACE/baseline"; fi
           haxe run.hxml --report-only --out "$GITHUB_WORKSPACE/results" $options --summary "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: render-test-report-${{ matrix.build }}
@@ -201,22 +205,22 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: render-test-report-develop
           path: site/develop
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: render-test-report-castlewars-prod
           path: site/castlewars-prod
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: render-test-report-cairo-supersampling
           path: site/cairo-supersampling
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: render-test-report-filters-flash-parity
           path: site/filters-flash-parity
@@ -238,9 +242,9 @@ jobs:
           </body></html>
           HTML
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
 
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
